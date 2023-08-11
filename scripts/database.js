@@ -181,3 +181,9 @@ export const getLocations = () => {
 export const getCustomers = () => {
   return database.customers.map((customer) => ({ ...customer }));
 };
+
+export const getEmployeeCustomers = () => {
+  return database.employeeCustomers.map((employeeCustomer) => ({
+    ...employeeCustomer,
+  }));
+};

@@ -1,6 +1,8 @@
 import {
   getComputers,
+  getCustomers,
   getDepartments,
+  getEmployeeCustomers,
   getEmployees,
   getLocations,
 } from "./database.js";
@@ -9,6 +11,8 @@ const computers = getComputers();
 const employees = getEmployees();
 const departments = getDepartments();
 const locations = getLocations();
+const customers = getCustomers();
+const employeeCustomers = getEmployeeCustomers();
 
 export const employeesOutput = () => {
   let html = `<h1> Our employees </h1>`;
@@ -22,6 +26,19 @@ export const employeesOutput = () => {
     const employeeLocation = locations.find(
       (location) => location.id === employee.locationId
     );
+    const relationships = employeeCustomers.filter(
+      (employeeCustomer) => employeeCustomer.employeeId === employee.id
+    );
+    const relationshipsArray = relationships.map((relationship) => {
+      return customers.find(
+        (customer) => customer.id === relationship.customerId
+      );
+    });
+    const relationshipsOutput = relationshipsArray
+      .map((output) => {
+        return `<li>${output.name}</li>`;
+      })
+      .join("");
     return `<div class="employee__details">
                       <section class="employee__name">
                           <h2>${employee.firstName} ${employee.lastName}</h2>
@@ -34,6 +51,12 @@ export const employeesOutput = () => {
                       </section>
                       <section class="employee__location">
                         Works at the ${employeeLocation.name} office.
+                    <section class="employee__customers">
+                        <ul>
+                        ${relationshipsOutput}
+                        </ul>
+                    </section>
+                        
               </div>`;
   });
   html += employeeArray.join("");
